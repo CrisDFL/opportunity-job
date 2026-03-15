@@ -1,0 +1,22 @@
+# Dependencias
+node_modules/
+
+# Next.js
+frontend/.next/
+frontend/out/
+
+# Variables de entorno ← contraseñas, NUNCA subirlas
+.env
+.env.local
+.env.production
+
+# .NET
+**/bin/
+**/obj/
+
+# Logs
+*.log
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
