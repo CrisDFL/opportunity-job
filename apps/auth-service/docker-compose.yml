@@ -1,0 +1,14 @@
+services:
+  postgres: # Nombre del servicio / contenedor
+    image: postgres:15 # Imagen oficial de PostgreSQL
+    environment: # Variables de entorno para configurar PostgreSQL
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: auth_db # Nombre de la base de datos
+    ports:
+      - '5432:5432' # el puerto de mi maquina : puerto del contenedor
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Volumen para persistir y guardar los datos de PostgreSQL
+
+volumes:
+  postgres_data:
