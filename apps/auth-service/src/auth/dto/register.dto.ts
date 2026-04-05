@@ -3,15 +3,15 @@ import { IsEmail, IsString, MinLength } from 'class-validator';
 // DTO (Clase - Plantilla) para el registro de usuarios
 export class RegisterDto {
   @IsString()
-  nombre: string;
+  nombre!: string;
 
   @IsString()
-  apellido: string;
+  apellido!: string;
 
   @IsEmail()
-  email: string;
+  email!: string;
 
   @IsString()
   @MinLength(6)
-  password: string;
+  password!: string;
 }

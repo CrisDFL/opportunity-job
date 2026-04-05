@@ -8,6 +8,8 @@ export const shorthands = undefined;
  * @param run {() => void | undefined}
  * @returns {Promise<void> | void}
  */
+
+// El sql que crea o modifica
 export const up = (pgm) => {
     pgm.sql(`
         CREATE TABLE IF NOT EXISTS usuarios (
@@ -26,6 +28,8 @@ export const up = (pgm) => {
  * @param run {() => void | undefined}
  * @returns {Promise<void> | void}
  */
+
+// El sql que elimina o revierte los cambios
 export const down = (pgm) => {
     pgm.sql(`DROP TABLE IF EXISTS usuarios`)
 };
