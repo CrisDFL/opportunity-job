@@ -1,13 +1,18 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import * as bcrypt from 'bcrypt';
 import { pool } from '../database';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable() // Decorador que marca esta clase como un servicio inyectable en NestJS
 export class AuthService {
   //Se injectan servicios y repositorios en el constructor
-  constructor() {}
+  constructor(private generateToken: JwtService) {}
 
   //Metodos
   async register(data: RegisterDto) {
@@ -31,7 +36,32 @@ export class AuthService {
     }
   }
 
-  login(data: LoginDto) {
-    return { message: 'Inicio de sesión exitoso' };
+  async login(data: LoginDto) {
+    // Consulta para seleccionar al usuario por email
+    const seleccionar = await pool.query(
+      `
+        SELECT * FROM usuarios WHERE email = $1
+      `,
+      [data.email],
+    );
+    // variable que almacena el resultado de la consulta
+    const user = seleccionar.rows[0] as { id: number; password: string };
+
+    if (seleccionar.rowCount === 0) {
+      throw new UnauthorizedException('Cuenta no encontrada');
+    }
+    // Comparación de la contraseña proporcionada con el hash almacenado en la base de datos
+    const comparePassword = await bcrypt.compare(data.password, user.password);
+    if (!comparePassword) {
+      throw new UnauthorizedException('Credenciales inválidas');
+    } else {
+      // Generación de un token JWT con el ID y email del usuario
+      const token = this.generateToken.sign({
+        id: user.id,
+        email: data.email,
+      });
+      // Retorno del mensaje de éxito junto con el token generado al cliente
+      return { message: 'Inicio exitoso', token: token };
+    }
   }
 }
