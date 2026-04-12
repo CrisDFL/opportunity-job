@@ -10,5 +10,20 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data # Volumen para persistir y guardar los datos de PostgreSQL
 
+  auth-service:
+    build: . # Construir la imagen a partir del Dockerfile en el directorio actual
+    ports:
+      - '3000:3000'
+    depends_on:
+      - postgres # Asegura que el servicio de PostgreSQL se inicie antes que auth-service
+    environment:
+      DB_HOST: postgres # El nombre del servicio de PostgreSQL definido en docker-compose.yml
+      DB_PORT: 5432
+      DB_USER: admin
+      DB_PASSWORD: admin123
+      DB_NAME: auth_db
+      JWT_SECRET: supersecreta123
+      PORT: 3000
+
 volumes:
   postgres_data:
